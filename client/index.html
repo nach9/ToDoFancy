@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <div id="fb-root"></div>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Bitter|Dosis|Lobster" rel="stylesheet">
+    <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10&appId=122577161755775';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    function checkLogin(){
+      localStorage.removeItem("tokenjwt")
+
+      FB.getLoginStatus(response=>{
+        console.log(response.authResponse.accessToken);
+        if(response.authResponse){
+          axios.post(`http://localhost:3000/users/login`, { accesstoken: response.authResponse.accessToken })
+          .then(response=>{
+            localStorage.setItem("tokenjwt", response.data.tokenjwt)
+            window.location.reload();
+          })
+        }else{
+          window.location.reload();
+        }
+      })
+    }
+
+    </script>
+    <title>FancyToDo</title>
+  </head>
+  <body>
+  <div id="app">
+  <div class="container-fluid">
+    <div class="row navigation">
+      <!-- <div class="col-md-12"> -->
+      <nav class="navbar navbar-inverse">
+       <div class="container-fluid">
+         <div class="navbar-header">
+           <a class="navbar-brand appname" href="#">ToDoFancy</a>
+         </div>
+         <ul class="nav navbar-nav">
+           <li class="active" @click="getAll()"><a href="#">Notes <span class="badge badge-warning" v-if="notes.length>0"  >{{notes.length}}</span></a></li>
+           <!-- <li><a href="#">Need Folow Up</a></li> -->
+           <!-- <li><a href="#">Completed</a></li> -->
+         </ul>
+         <form class="navbar-form navbar-left">
+           <div class="input-group">
+             <input type="text" v-model="newnote" class="form-control" placeholder="add New Note">
+             <span class="input-group-btn">
+               <button class="btn btn-default" v-on:click="addNote()" type="button">Add</button>
+             </span>
+           </div>
+        </form>
+         <ul class="nav navbar-nav navbar-right">
+           <li>
+             <div class="fbbutton" >
+               <!-- <button type="button" class="btn btn-primary" @click="fblogin">Login FB</button> -->
+               <!-- <a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a> -->
+               <fb:login-button  data-max-rows="1" data-size="medium"
+               data-button-type="continue_with" data-show-faces="false"
+               data-auto-logout-link="true" data-use-continue-as="true" scope="public_profile,email" onLogin="checkLogin()" >
+             </fb:login-button>
+             </div>
+           </li>
+         </ul>
+       </div>
+      </nav>
+    <!-- </div> -->
+  </div>
+  <!-- </div> -->
+
+  <!-- <div class="container-fluid main"> -->
+    <div class="row main ">
+      <div class="col-md-3 listnotes" v-for="(note,inote) in notes">
+        <!-- <div class="row"> -->
+          <div class=" panel panel-default notelist" >
+            <button type="button" class="close" @click="deleteNote(inote)" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h3 class="notesheader">{{note.header}}</h3>
+            <div class="list-group ">
+              <a href="#" class="list-group-item " v-for="(l,ilist) in note.list " @click="toggletask(inote,ilist)"><span class="glyphicon glyphicon-ok" v-if="l.completed" aria-hidden="true"></span>
+                <h4 class="list-group-item-heading">{{l.task}}</h4>
+                <p class="list-group-item-text">{{l.detail}}</p>
+              </a>
+            </div>
+            <div class="input-group">
+              <input type="text" v-model="notes[inote].newtask" class="form-control" placeholder="[task]:[detail]">
+              <span class="input-group-btn">
+                <button class="btn btn-default" v-on:click="addTask(inote)" type="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+              </span>
+            </div>
+            <!-- <button type="button" class="btn btn-success btn-sm">Completed <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button> -->
+        <!-- </div> -->
+      </div>
+    </div>
+
+    </div>
+  </div>
+
+
+
+</div>
+
+  </body>
+  <script src="script.js"></script>
+
+</html>

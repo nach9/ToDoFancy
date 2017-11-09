@@ -1,0 +1,38 @@
+
+
+.fbbutton{
+  padding: 10px;
+}
+
+.appname{
+  font-family: 'Lobster', sans-serif;
+}
+
+.navigation{
+  height: 53px;
+  background-color: Black;
+}
+
+.main{
+  padding-top: 20px;
+  min-height: 100vh;
+  background: linear-gradient(to top left, #33ccff 0%, #333399 100%);
+}
+
+.notesheader{
+  font-family: 'Lobster', sans-serif;
+}
+
+.notelist{
+  font-family: 'Lobster', sans-serif;
+  color:grey;
+  box-shadow: 10px 10px 5px grey;
+  /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
+  /*font-family: 'Dosis', sans-serif;*/
+}
+
+.listnotes{
+  color:grey;
+  text-align: center;
+
+}
